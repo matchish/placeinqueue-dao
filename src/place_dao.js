@@ -1,7 +1,6 @@
 'use strict';
 
 const AWS = require("aws-sdk");
-const uuidv1 = require('uuid/v1');
 
 AWS.config.update({
     region: process.env.AWS_REGION,
@@ -9,9 +8,6 @@ AWS.config.update({
 });
 
 const docClient = new AWS.DynamoDB.DocumentClient();
-const dynamodb = new AWS.DynamoDB();
-
-const moment = require('moment')
 
 module.exports = class PlaceDao {
 
