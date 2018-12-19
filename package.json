@@ -1,13 +1,32 @@
 {
   "name": "placeinqueue-dao",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dao for placeinqueue",
   "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matchish/placeinqueue-dao.git"
+  },
+  "keywords": [
+    "placeinqueue",
+    "npm",
+    "module",
+    "node",
+    "javascript"
+  ],
+  "author": "Sergey Shlyakhov <husband.sergey@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/placeinqueue-dao/issues"
+  },
+  "homepage": "https://github.com/placeinqueue-dao#readme",
   "dependencies": {
     "aws-sdk": "^2.369.0",
     "uuid": "^3.3.2"
