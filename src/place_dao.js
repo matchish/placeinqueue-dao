@@ -109,10 +109,12 @@ module.exports = class PlaceDao {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: "Places",
-                KeyConditionExpression: "queue_id = :queue_id and id < :number_of_places",
+                IndexName: "FirstInQueue",
+                KeyConditionExpression: "queue_id = :queue_id",
+                FilterExpression: " id <= :number_of_places",
                 ExpressionAttributeValues: {
                     ":queue_id": queue.id,
-                    ":number_of_places": queue.number_of_places
+                    ":number_of_places": queue.number_of_places,
                 },
                 ProjectionExpression: "id, queue_id, used, place_url, remote_id, number_in_queue, heartbeat_at"
             };
