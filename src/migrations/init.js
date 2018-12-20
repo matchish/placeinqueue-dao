@@ -38,11 +38,28 @@ params = {
     "AttributeDefinitions": [
         {"AttributeName": "id", "AttributeType": "N"},
         {"AttributeName": "queue_id", "AttributeType": "S"},
+        {"AttributeName": "sort", "AttributeType": "N"},
     ],
     "ProvisionedThroughput": {
         "ReadCapacityUnits": 5,
         "WriteCapacityUnits": 5
-    }
+    },
+    LocalSecondaryIndexes: [{
+        IndexName: "FirstInQueue",
+        KeySchema: [
+            {
+                AttributeName: "queue_id",
+                KeyType: "HASH"
+            },
+            {
+                AttributeName: "sort",
+                KeyType: "RANGE"
+            }
+        ],
+        Projection: {
+            ProjectionType: "ALL"
+        }
+    }]
 }
 
 dynamodb.createTable(params, function(err, data) {

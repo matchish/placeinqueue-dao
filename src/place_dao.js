@@ -12,6 +12,11 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 module.exports = class PlaceDao {
 
     saveEntity(entity) {
+        if (entity.number_in_queue == undefined || entity.number_in_queue !== null) {
+            entity.sort = 1;
+        } else {
+            entity.sort = entity.number_in_queue > 0 ? 1/entity.number_in_queue : 0;
+        }
         return new Promise((resolve, reject) => {
             let params = {
                 TableName: "Places",
@@ -37,10 +42,18 @@ module.exports = class PlaceDao {
                 expressionAttributeValues[":used"] = entity.used;
                 expressionAttributeNames["#used"] = "used";
             }
-            if (entity.number !== undefined) {
+            if (entity.number_in_queue !== undefined) {
                 updateExpression.push("#nmbr = :nmbr")
-                expressionAttributeValues[":nmbr"] = entity.number;
-                expressionAttributeNames["#nmbr"] = "number";
+                expressionAttributeValues[":nmbr"] = entity.number_in_queue;
+                expressionAttributeNames["#nmbr"] = "number_in_queue";
+                updateExpression.push("#sort = :sort")
+                if (entity.number_in_queue === null) {
+                    expressionAttributeValues[":sort"] = 1
+                } else {
+                    expressionAttributeValues[":sort"] = entity.number_in_queue > 0 ? 1/entity.number_in_queue : 0;
+                }
+                expressionAttributeNames["#sort"] = "sort";
+
             }
             if (entity.remote_id !== undefined) {
                 updateExpression.push("#rid = :rid")
