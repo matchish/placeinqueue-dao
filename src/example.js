@@ -13,31 +13,56 @@ const placeDao = new PlaceDao();
             prestart: 5,
             number_of_places: 3
         });
-        console.log(queue);
-        let queues = await queueDao.readEntities();
-        console.log(queues);
+        // console.log(queue);
+        // let queues = await queueDao.readEntities();
+        // console.log(queues);
         queue.number_of_places = 5;
         await queueDao.updateEntity(queue);
-        queues = await queueDao.readEntities();
-        console.log(queues);
+        // queues = await queueDao.readEntities();
+        // console.log(queues);
+        console.log('put places');
         await placeDao.saveEntity({
             queue_id: queue.id,
-            id: 1
+            id: 1,
+            number_in_queue: 3
         });
         await placeDao.saveEntity({
             queue_id: queue.id,
-            id: 2
+            id: 2,
+            number_in_queue: 3
         });
         await placeDao.saveEntity({
             queue_id: queue.id,
-            id: 3
+            id: 3,
+            number_in_queue: -1
         });
-        let places = await placeDao.readEntitiesByQueueId(queue.id);
+        console.log('read places');
+        let places = await placeDao.readEntitiesByQueue(queue);
         console.log(places);
+        console.log('update place');
+        await placeDao.updateEntity({
+            queue_id: queue.id,
+            id: 3,
+            used: false,
+            remote_id: "lorem",
+            url: "google",
+            number_in_queue: 2,
+            proxy: {},
+            cookies: [{}],
+            useragent: "Chrome",
+            heartbeat_at: new Date().toISOString()
+        });
+        console.log('read places');
+        places = await placeDao.readEntitiesByQueue(queue);
+        console.log(places);
+        console.log('place', await  placeDao.readEntity({
+            id: 3,
+            queue_id: queue.id
+        }));
         await queueDao.deleteEntity(queue.id);
         queues = await queueDao.readEntities();
         console.log(queues);
-        places = await placeDao.readEntitiesByQueueId(queue.id);
+        places = await placeDao.readEntitiesByQueue(queue);
         console.log(places);
     } catch (e) {
         console.log(e)
