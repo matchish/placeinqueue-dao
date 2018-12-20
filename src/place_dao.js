@@ -29,13 +29,62 @@ module.exports = class PlaceDao {
 
     updateEntity(entity) {
         return new Promise((resolve, reject) => {
+            let updateExpression = [];
+            let expressionAttributeValues = {};
+            let expressionAttributeNames = {};
+            if (entity.used !== undefined) {
+                updateExpression.push("#used = :used")
+                expressionAttributeValues[":used"] = entity.used;
+                expressionAttributeNames["#used"] = "used";
+            }
+            if (entity.number !== undefined) {
+                updateExpression.push("#nmbr = :nmbr")
+                expressionAttributeValues[":nmbr"] = entity.number;
+                expressionAttributeNames["#nmbr"] = "number";
+            }
+            if (entity.remote_id !== undefined) {
+                updateExpression.push("#rid = :rid")
+                expressionAttributeValues[":rid"] = entity.remote_id;
+                expressionAttributeNames["#rid"] = "remote_id";
+            }
+            if (entity.url !== undefined) {
+                updateExpression.push("#u = :u")
+                expressionAttributeValues[":u"] = entity.url;
+                expressionAttributeNames["#u"] = "url";
+            }
+            if (entity.proxy !== undefined) {
+                updateExpression.push("#proxy = :proxy")
+                expressionAttributeValues[":proxy"] = entity.proxy;
+                expressionAttributeNames["#proxy"] = "proxy";
+            }
+            if (entity.useragent !== undefined) {
+                updateExpression.push("#ua = :ua")
+                expressionAttributeValues[":ua"] = entity.useragent;
+                expressionAttributeNames["#ua"] = "useragent";
+            }
+            if (entity.cookies !== undefined) {
+                updateExpression.push("#c = :c")
+                expressionAttributeValues[":c"] = entity.cookies;
+                expressionAttributeNames["#c"] = "cookies";
+            }
+            if (entity.heartbeat_at !== undefined) {
+                updateExpression.push("#hb = :hb")
+                expressionAttributeValues[":hb"] = entity.heartbeat_at;
+                expressionAttributeNames["#hb"] = "heartbeat_at";
+            }
             let params = {
                 TableName: "Places",
-                Item: entity
+                Key: {
+                    queue_id: entity.queue_id,
+                    id: entity.id
+                },
+                UpdateExpression: "set " + updateExpression.join(", "),
+                ExpressionAttributeValues: expressionAttributeValues,
+                ExpressionAttributeNames: expressionAttributeNames,
             };
             docClient.update(params, async function (err, data) {
                 if (err) {
-                    reject("Unable to add place for queue" + entity.queue_id + ". Error JSON:" + JSON.stringify(err, null, 2));
+                    reject("Unable to update place for queue" + entity.queue_id + ". Error JSON:" + JSON.stringify(err, null, 2));
                 } else {
                     resolve(entity);
                 }
@@ -43,14 +92,14 @@ module.exports = class PlaceDao {
         });
     }
 
-    readEntitiesByQueueId(id) {
+    readEntitiesByQueue(queue) {
         return new Promise((resolve, reject) => {
             var params = {
                 TableName: "Places",
                 KeyConditionExpression: "queue_id = :queue_id and id < :number_of_places",
                 ExpressionAttributeValues: {
-                    ":queue_id": id,
-                    ":number_of_places": 2
+                    ":queue_id": queue.id,
+                    ":number_of_places": queue.number_of_places
                 },
                 ProjectionExpression: "id, queue_id, used, place_url, remote_id, proxy, useragent, number_in_queue, heartbeat_at"
             };
@@ -64,4 +113,20 @@ module.exports = class PlaceDao {
         });
     }
 
+    readEntity(id) {
+        return new Promise((resolve, reject) => {
+            let params = {
+                TableName: table,
+                Key: id
+            };
+
+            docClient.get(params, function (err, data) {
+                if (err) {
+                    reject("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
 };
