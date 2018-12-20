@@ -101,7 +101,7 @@ module.exports = class PlaceDao {
                     ":queue_id": queue.id,
                     ":number_of_places": queue.number_of_places
                 },
-                ProjectionExpression: "id, queue_id, used, place_url, remote_id, proxy, useragent, number_in_queue, heartbeat_at"
+                ProjectionExpression: "id, queue_id, used, place_url, remote_id, number_in_queue, heartbeat_at"
             };
             docClient.query(params, function (err, data) {
                 if (err) {
@@ -116,7 +116,7 @@ module.exports = class PlaceDao {
     readEntity(id) {
         return new Promise((resolve, reject) => {
             let params = {
-                TableName: table,
+                TableName: "Places",
                 Key: id
             };
 
