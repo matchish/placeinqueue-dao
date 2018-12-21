@@ -10,14 +10,6 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-const isValidUrl = (string) => {
-    try {
-        new URL(string);
-        return true;
-    } catch (_) {
-        return false;
-    }
-}
 const validate = (entity) => {
     console.log(entity);
     if (!entity.title) {
@@ -32,7 +24,7 @@ const validate = (entity) => {
     if (!entity.start_at) {
         throw new Error(`Start date is required`);
     }
-    if (Number(entity.prestart) !== entity.prestart) {
+    if (!Number.isInteger(entity.prestart)) {
         throw new Error(`Prestart is required`);
     }
     if (!entity.url) {
