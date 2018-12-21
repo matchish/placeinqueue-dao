@@ -120,7 +120,7 @@ module.exports = class PlaceDao {
             };
             docClient.query(params, function (err, data) {
                 if (err) {
-                    reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
+                    reject(new Error("Unable to read items. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(data.Items)
                 }
