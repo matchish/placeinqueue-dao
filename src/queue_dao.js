@@ -108,7 +108,9 @@ module.exports = class QueueDao {
         return new Promise((resolve, reject) => {
             let params = {
                 TableName: "Queues",
-                Key: id
+                Key: {
+                    "id": id,
+                }
             };
 
             docClient.get(params, function (err, data) {
