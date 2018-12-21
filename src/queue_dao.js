@@ -11,7 +11,6 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const validate = (entity) => {
-    console.log(entity);
     if (!entity.title) {
         throw new Error(`Queue title is required`);
     }
