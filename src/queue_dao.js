@@ -102,7 +102,7 @@ module.exports = class QueueDao {
                 }
             });
         });
-    },
+    }
 
     readEntity(id) {
         return new Promise((resolve, reject) => {
