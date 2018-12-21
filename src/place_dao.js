@@ -24,7 +24,7 @@ module.exports = class PlaceDao {
             };
             docClient.put(params, async function (err, data) {
                 if (err) {
-                    reject("Unable to add place for queue" + entity.queue_id + ". Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to add place for queue" + entity.queue_id + ". Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(entity);
                 }
@@ -97,7 +97,7 @@ module.exports = class PlaceDao {
             };
             docClient.update(params, async function (err, data) {
                 if (err) {
-                    reject("Unable to update place for queue" + entity.queue_id + ". Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to update place for queue" + entity.queue_id + ". Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(entity);
                 }
@@ -120,7 +120,7 @@ module.exports = class PlaceDao {
             };
             docClient.query(params, function (err, data) {
                 if (err) {
-                    reject("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(data.Items)
                 }
@@ -137,7 +137,7 @@ module.exports = class PlaceDao {
 
             docClient.get(params, function (err, data) {
                 if (err) {
-                    reject("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(data);
                 }

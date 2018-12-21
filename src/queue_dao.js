@@ -27,7 +27,7 @@ module.exports = class QueueDao {
             };
             docClient.put(params, async function (err, data) {
                 if (err) {
-                    reject("Unable to add queue " + entity.title + ". Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to add queue " + entity.title + ". Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(entity);
                 }
@@ -44,7 +44,7 @@ module.exports = class QueueDao {
             };
             docClient.put(params, async function (err, data) {
                 if (err) {
-                    reject("Unable to add queue " + entity.title + ". Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to add queue " + entity.title + ". Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve();
                 }
@@ -62,7 +62,7 @@ module.exports = class QueueDao {
             };
             docClient.delete(params, function (err, data) {
                 if (err) {
-                    reject("Unable to delete item. Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to delete item. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve();
                 }
@@ -81,7 +81,7 @@ module.exports = class QueueDao {
             };
             docClient.scan(params, function (err, data) {
                 if (err) {
-                    reject("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2));
+                    reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
                     resolve(data.Items)
                 }
