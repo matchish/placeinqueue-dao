@@ -102,5 +102,22 @@ module.exports = class QueueDao {
                 }
             });
         });
+    },
+
+    readEntity(id) {
+        return new Promise((resolve, reject) => {
+            let params = {
+                TableName: "Queues",
+                Key: id
+            };
+
+            docClient.get(params, function (err, data) {
+                if (err) {
+                    reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
+                } else {
+                    resolve(data);
+                }
+            });
+        });
     }
 };
