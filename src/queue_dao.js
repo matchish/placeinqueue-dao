@@ -10,9 +10,33 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 
+const isValidUrl = (string) => {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
 const validate = (entity) => {
-    if (parseInt(entity.places) > parseInt(process.env.MAX_PLACES)) {
+    console.log(entity);
+    if (!entity.title) {
+        throw new Error(`Queue title is required`);
+    }
+    if (!entity.number_of_places) {
+        throw new Error(`Number of places is required`);
+    }
+    if (parseInt(entity.number_of_places) > parseInt(process.env.MAX_PLACES)) {
         throw new Error(`Max number of places is ${process.env.MAX_PLACES}`);
+    }
+    if (!entity.start_at) {
+        throw new Error(`Start date is required`);
+    }
+    if (Number(entity.prestart) !== entity.prestart) {
+        throw new Error(`Prestart is required`);
+    }
+    if (!entity.url) {
+        throw new Error(`Url is required`);
     }
 };
 
