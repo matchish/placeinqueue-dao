@@ -8,16 +8,18 @@ const placeDao = new PlaceDao();
     try {
         let queue = await queueDao.saveEntity({
             title: "Rugby",
-            queue_url: "test",
+            url: "test",
             start_at: new Date().toISOString(),
             prestart: 5,
             number_of_places: 3
         });
-        // console.log(queue);
-        // let queues = await queueDao.readEntities();
-        // console.log(queues);
+        console.log(queue);
+        let queues = await queueDao.readEntities();
+        console.log(queues);
         queue.number_of_places = 5;
         await queueDao.updateEntity(queue);
+        queue = await queueDao.readEntity(queue.id);
+        console.log(queue);
         // queues = await queueDao.readEntities();
         // console.log(queues);
         console.log('put places');
