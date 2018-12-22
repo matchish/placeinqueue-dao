@@ -139,7 +139,7 @@ module.exports = class PlaceDao {
                 if (err) {
                     reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
-                    resolve(data);
+                    resolve(data.Item);
                 }
             });
         });

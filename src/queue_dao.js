@@ -117,7 +117,7 @@ module.exports = class QueueDao {
                 if (err) {
                     reject(new Error("Unable to read item. Error JSON:" + JSON.stringify(err, null, 2)));
                 } else {
-                    resolve(data);
+                    resolve(data.Item);
                 }
             });
         });
