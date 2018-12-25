@@ -12,7 +12,7 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 module.exports = class PlaceDao {
 
     saveEntity(entity) {
-        if (entity.number_in_queue == undefined || entity.number_in_queue !== null) {
+        if (entity.number_in_queue == undefined || entity.number_in_queue === null) {
             entity.sort = 1;
         } else {
             entity.sort = entity.number_in_queue > 0 ? 1/entity.number_in_queue : 0;
