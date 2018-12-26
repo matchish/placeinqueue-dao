@@ -15,7 +15,7 @@ module.exports = class PlaceDao {
         if (entity.number_in_queue == undefined || entity.number_in_queue === null) {
             entity.sort = 1;
         } else {
-            entity.sort = entity.number_in_queue > 0 ? 1/entity.number_in_queue : 0;
+            entity.sort = entity.number_in_queue > 0 ? (1 - 1/entity.number_in_queue) : 0;
         }
         return new Promise((resolve, reject) => {
             let params = {
@@ -50,7 +50,7 @@ module.exports = class PlaceDao {
                 if (entity.number_in_queue === null) {
                     expressionAttributeValues[":sort"] = 1
                 } else {
-                    expressionAttributeValues[":sort"] = entity.number_in_queue > 0 ? 1/entity.number_in_queue : 0;
+                    expressionAttributeValues[":sort"] = entity.number_in_queue > 0 ? (1 - 1/entity.number_in_queue) : 0;
                 }
                 expressionAttributeNames["#sort"] = "sort";
             } else {
