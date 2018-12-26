@@ -119,7 +119,7 @@ module.exports = class PlaceDao {
                     ":queue_id": queue.id,
                     ":number_of_places": queue.number_of_places,
                 },
-                ProjectionExpression: "id, queue_id, used, place_url, remote_id, number_in_queue, heartbeat_at"
+                ProjectionExpression: "id, queue_id, used, url, remote_id, number_in_queue, heartbeat_at, sort"
             };
             docClient.query(params, function (err, data) {
                 if (err) {
