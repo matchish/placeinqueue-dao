@@ -57,6 +57,7 @@ module.exports = class PlaceDao {
                 updateExpression.push("#sort = if_not_exists(#sort, :sort)")
                 expressionAttributeValues[":sort"] = 1;
             }
+            expressionAttributeNames["#sort"] = "sort";
             if (entity.remote_id !== undefined) {
                 updateExpression.push("#rid = :rid")
                 expressionAttributeValues[":rid"] = entity.remote_id;
