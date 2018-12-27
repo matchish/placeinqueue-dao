@@ -119,9 +119,10 @@ module.exports = class PlaceDao {
                 ":number_of_places": queue.number_of_places,
             },
             ExpressionAttributeNames: {
-                "#u": 'url'
+                "#u": 'url',
+                "#sts": 'sts',
             },
-            ProjectionExpression: "id, queue_id, used, #u, remote_id, number_in_queue, heartbeat_at, sort, status"
+            ProjectionExpression: "id, queue_id, used, #u, remote_id, number_in_queue, heartbeat_at, sort, #sts"
         };
     }
 
