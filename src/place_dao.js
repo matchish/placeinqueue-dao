@@ -108,22 +108,26 @@ module.exports = class PlaceDao {
         });
     }
 
+    scopeEntitiesByQueue(queue) {
+        return {
+            TableName: "Places",
+            IndexName: "FirstInQueue",
+            KeyConditionExpression: "queue_id = :queue_id",
+            FilterExpression: " id <= :number_of_places",
+            ExpressionAttributeValues: {
+                ":queue_id": queue.id,
+                ":number_of_places": queue.number_of_places,
+            },
+            ExpressionAttributeNames: {
+                "#u": 'url'
+            },
+            ProjectionExpression: "id, queue_id, used, #u, remote_id, number_in_queue, heartbeat_at, sort, status"
+        };
+    }
+
     readEntitiesByQueue(queue) {
         return new Promise((resolve, reject) => {
-            var params = {
-                TableName: "Places",
-                IndexName: "FirstInQueue",
-                KeyConditionExpression: "queue_id = :queue_id",
-                FilterExpression: " id <= :number_of_places",
-                ExpressionAttributeValues: {
-                    ":queue_id": queue.id,
-                    ":number_of_places": queue.number_of_places,
-                },
-                ExpressionAttributeNames: {
-                    "#u": 'url'
-                },
-                ProjectionExpression: "id, queue_id, used, #u, remote_id, number_in_queue, heartbeat_at, sort"
-            };
+            var params = this.scopeEntitiesByQueue(queue);
             docClient.query(params, function (err, data) {
                 if (err) {
                     reject(new Error("Unable to read items. Error JSON:" + JSON.stringify(err, null, 2)));
