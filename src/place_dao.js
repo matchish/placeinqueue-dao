@@ -88,6 +88,16 @@ module.exports = class PlaceDao {
                 expressionAttributeValues[":hb"] = entity.heartbeat_at;
                 expressionAttributeNames["#hb"] = "heartbeat_at";
             }
+            if (entity.screenshot !== undefined) {
+                updateExpression.push("#scr = :scr")
+                expressionAttributeValues[":scr"] = entity.screenshot;
+                expressionAttributeNames["#scr"] = "screenshot";
+            }
+            if (entity.action !== undefined) {
+                updateExpression.push("#act = :act")
+                expressionAttributeValues[":act"] = entity.action;
+                expressionAttributeNames["#act"] = "action";
+            }
             let params = {
                 TableName: "Places",
                 Key: {
@@ -121,8 +131,10 @@ module.exports = class PlaceDao {
             ExpressionAttributeNames: {
                 "#u": "url",
                 "#sts": "status",
+                "#scr": "screenshot",
+                "#act": "action",
             },
-            ProjectionExpression: "id, queue_id, used, #u, remote_id, number_in_queue, heartbeat_at, sort, #sts"
+            ProjectionExpression: "id, queue_id, used, #u, remote_id, number_in_queue, heartbeat_at, sort, #sts, #scr, #act"
         };
     }
 
