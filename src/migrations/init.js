@@ -32,11 +32,10 @@ dynamodb.createTable(params, function(err, data) {
 params = {
     "TableName": "Places",
     "KeySchema": [
-        {"AttributeName": "queue_id", "KeyType": "HASH"},
-        {"AttributeName": "id", "KeyType": "RANGE"},
+        {"AttributeName": "uid", "KeyType": "HASH"},
     ],
     "AttributeDefinitions": [
-        {"AttributeName": "id", "AttributeType": "N"},
+        {"AttributeName": "uid", "AttributeType": "S"},
         {"AttributeName": "queue_id", "AttributeType": "S"},
         {"AttributeName": "sort", "AttributeType": "N"},
     ],
@@ -44,7 +43,7 @@ params = {
         "ReadCapacityUnits": 5,
         "WriteCapacityUnits": 5
     },
-    LocalSecondaryIndexes: [{
+    GlobalSecondaryIndexes: [{
         IndexName: "FirstInQueue",
         KeySchema: [
             {

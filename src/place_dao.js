@@ -12,6 +12,12 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 module.exports = class PlaceDao {
 
     saveEntity(entity) {
+
+        let now = new Date();
+        //TODO magic number
+        let expires = new Date(now.getTime() + 24*60*60000);
+        entity.expires_at = expires.toISOString();
+        entity.uid = entity.queue_id + '#' + entity.id;
         if (entity.number_in_queue == undefined || entity.number_in_queue === null) {
             entity.sort = 1;
         } else {
@@ -37,6 +43,18 @@ module.exports = class PlaceDao {
             let updateExpression = [];
             let expressionAttributeValues = {};
             let expressionAttributeNames = {};
+            if (entity.uid === undefined) {
+                entity.uid = entity.queue_id + '#' + entity.id;
+            }
+            if (entity.expires_at === undefined) {
+                let now = new Date();
+                //TODO magic number
+                let expires = new Date(now.getTime() + 24*60*60000);
+                entity.expires_at = expires.toISOString();
+                updateExpression.push("#exp_at = :exp_at")
+                expressionAttributeValues[":exp_at"] = entity.expires_at;
+                expressionAttributeNames["#exp_at"] = "exp_at";
+            }
             if (entity.used !== undefined) {
                 updateExpression.push("#used = :used")
                 expressionAttributeValues[":used"] = entity.used;
@@ -84,25 +102,24 @@ module.exports = class PlaceDao {
                 expressionAttributeNames["#c"] = "cookies";
             }
             if (entity.heartbeat_at !== undefined) {
-                updateExpression.push("#hb = :hb")
+                updateExpression.push("#hb = :hb");
                 expressionAttributeValues[":hb"] = entity.heartbeat_at;
                 expressionAttributeNames["#hb"] = "heartbeat_at";
             }
             if (entity.screenshot !== undefined) {
-                updateExpression.push("#scr = :scr")
+                updateExpression.push("#scr = :scr");
                 expressionAttributeValues[":scr"] = entity.screenshot;
                 expressionAttributeNames["#scr"] = "screenshot";
             }
             if (entity.action !== undefined) {
-                updateExpression.push("#act = :act")
+                updateExpression.push("#act = :act");
                 expressionAttributeValues[":act"] = entity.action;
                 expressionAttributeNames["#act"] = "action";
             }
             let params = {
                 TableName: "Places",
                 Key: {
-                    queue_id: entity.queue_id,
-                    id: entity.id
+                    uid: entity.uid
                 },
                 UpdateExpression: "set " + updateExpression.join(", "),
                 ExpressionAttributeValues: expressionAttributeValues,
@@ -151,11 +168,30 @@ module.exports = class PlaceDao {
         });
     }
 
-    readEntity(id) {
+    readEntitiesByQueuePaginated(queue, limit, offset) {
+        return new Promise((resolve, reject) => {
+            var params = this.scopeEntitiesByQueue(queue);
+            params.limit = limit;
+            params.ExclusiveStartKey = offset;
+            docClient.query(params, function (err, data) {
+                if (err) {
+                    reject(new Error("Unable to read items. Error JSON:" + JSON.stringify(err, null, 2)));
+                } else {
+                    resolve({
+                        items: data.Items,
+                        offset: data.lastEvaluatedKey,
+                        total: data.Count
+                    })
+                }
+            });
+        });
+    }
+
+    readEntity(key) {
         return new Promise((resolve, reject) => {
             let params = {
                 TableName: "Places",
-                Key: id
+                Key: key.queue_id + '#' + key.id
             };
 
             docClient.get(params, function (err, data) {
