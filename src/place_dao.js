@@ -53,7 +53,7 @@ module.exports = class PlaceDao {
                 entity.expires_at = expires.toISOString();
                 updateExpression.push("#exp_at = :exp_at")
                 expressionAttributeValues[":exp_at"] = entity.expires_at;
-                expressionAttributeNames["#exp_at"] = "exp_at";
+                expressionAttributeNames["#exp_at"] = "expires_at";
             }
             if (entity.used !== undefined) {
                 updateExpression.push("#used = :used")
@@ -191,7 +191,7 @@ module.exports = class PlaceDao {
         return new Promise((resolve, reject) => {
             let params = {
                 TableName: "Places",
-                Key: key.queue_id + '#' + key.id
+                Key: { uid: key.queue_id + '#' + key.id}
             };
 
             docClient.get(params, function (err, data) {

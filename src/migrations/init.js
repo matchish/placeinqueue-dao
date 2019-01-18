@@ -72,3 +72,16 @@ dynamodb.createTable(params, function(err, data) {
         console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
     }
 });
+
+params = {
+    TableName: 'Places',
+    TimeToLiveSpecification: {
+        AttributeName: 'expires_at',
+        Enabled: true
+    }
+};
+
+dynamodb.updateTimeToLive(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
+});
