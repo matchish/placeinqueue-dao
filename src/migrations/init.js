@@ -43,21 +43,25 @@ params = {
         "ReadCapacityUnits": 5,
         "WriteCapacityUnits": 5
     },
-    GlobalSecondaryIndexes: [{
-        IndexName: "FirstInQueue",
-        KeySchema: [
+    "GlobalSecondaryIndexes": [{
+        "IndexName": "FirstInQueue",
+        "KeySchema": [
             {
-                AttributeName: "queue_id",
-                KeyType: "HASH"
+                "AttributeName": "queue_id",
+                "KeyType": "HASH"
             },
             {
-                AttributeName: "sort",
-                KeyType: "RANGE"
+                "AttributeName": "sort",
+                "KeyType": "RANGE"
             }
         ],
-        Projection: {
-            ProjectionType: "ALL"
-        }
+        "Projection": {
+            "ProjectionType": "ALL"
+        },
+        "ProvisionedThroughput": {
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+        },
     }]
 }
 
