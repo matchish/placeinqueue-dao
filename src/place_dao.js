@@ -116,6 +116,16 @@ module.exports = class PlaceDao {
                 expressionAttributeValues[":act"] = entity.action;
                 expressionAttributeNames["#act"] = "action";
             }
+            if (entity.id !== undefined) {
+                updateExpression.push("#place_id = :place_id");
+                expressionAttributeValues[":place_id"] = entity.id;
+                expressionAttributeNames["#place_id"] = "id";
+            }
+            if (entity.queue_id !== undefined) {
+                updateExpression.push("#queue_id = :queue_id");
+                expressionAttributeValues[":queue_id"] = entity.queue_id;
+                expressionAttributeNames["#queue_id"] = "queue_id";
+            }
             let params = {
                 TableName: "Places",
                 Key: {
