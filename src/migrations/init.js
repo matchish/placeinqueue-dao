@@ -96,23 +96,33 @@ let dynamodb = new AWS.DynamoDB();
     });
 
     await new Promise((resolve, reject) => {
+
         let params = {
-            TableName: 'Places',
-            TimeToLiveSpecification: {
-                AttributeName: 'expires_at',
-                Enabled: true
-            }
+            TableName: 'Places'
         };
 
-        dynamodb.updateTimeToLive(params, function (err, data) {
-            if (err) {
-                console.log(err, err.stack);
-                reject();
-            }
-            else {
-                console.log(data);
-                resolve();
+        dynamodb.waitFor('tableExists', params, (err, data) => {
+            if (err) console.log(err, err.stack);
+            else{
+                let params = {
+                    TableName: 'Places',
+                    TimeToLiveSpecification: {
+                        AttributeName: 'expires_at',
+                        Enabled: true
+                    }
+                };
+                dynamodb.updateTimeToLive(params, function (err, data) {
+                    if (err) {
+                        console.log(err, err.stack);
+                        reject();
+                    }
+                    else {
+                        console.log(data);
+                        resolve();
+                    }
+                });
             }
         });
+
     });
 })();
