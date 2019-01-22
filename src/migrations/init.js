@@ -70,18 +70,39 @@ dynamodb.createTable(params, function(err, data) {
         console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
     } else {
         console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
+        let params = {
+            TableName: 'Places',
+            TimeToLiveSpecification: {
+                AttributeName: 'expires_at',
+                Enabled: true
+            }
+        };
+
+        dynamodb.updateTimeToLive(params, function(err, data) {
+            if (err) console.log(err, err.stack); // an error occurred
+            else     console.log(data);           // successful response
+        });
     }
 });
 
 params = {
-    TableName: 'Places',
-    TimeToLiveSpecification: {
-        AttributeName: 'expires_at',
-        Enabled: true
+    "TableName": "Lambdas",
+    "KeySchema": [
+        {"AttributeName": "partition_id", "KeyType": "HASH"},
+    ],
+    "AttributeDefinitions": [
+        {"AttributeName": "partition_id", "AttributeType": "S"},
+    ],
+    "ProvisionedThroughput": {
+        "ReadCapacityUnits": 5,
+        "WriteCapacityUnits": 5
     }
-};
+}
 
-dynamodb.updateTimeToLive(params, function(err, data) {
-    if (err) console.log(err, err.stack); // an error occurred
-    else     console.log(data);           // successful response
+dynamodb.createTable(params, function(err, data) {
+    if (err) {
+        console.error("Unable to create table. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("Created table. Table description JSON:", JSON.stringify(data, null, 2));
+    }
 });
