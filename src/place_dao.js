@@ -16,7 +16,7 @@ module.exports = class PlaceDao {
         let now = new Date();
         //TODO magic number
         let expires = new Date(now.getTime() + 24*60*60000);
-        entity.expires_at = expires.toISOString();
+        entity.expires_at = Math.round(now.getTime() / 1000);
         entity.uid = entity.queue_id + '#' + entity.id;
         if (entity.number_in_queue == undefined || entity.number_in_queue === null) {
             entity.sort = 1;
